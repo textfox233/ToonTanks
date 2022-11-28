@@ -20,8 +20,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY()	// forward declaration to avoid additional header include
-	class UCapsuleComponent* CapsuleComp;
+	UPROPERTY()	
+	class UCapsuleComponent* CapsuleComp; // forward declaration to avoid additional header include
+	UPROPERTY()	
+	UStaticMeshComponent* BaseMesh;
+	UPROPERTY()
+	UStaticMeshComponent* TurretMesh;
+	UPROPERTY()
+	USceneComponent* ProjectileSpawnPoint;
 
 public:	
 	// Called every frame
