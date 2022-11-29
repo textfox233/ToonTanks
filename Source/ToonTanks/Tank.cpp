@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 ATank :: ATank()
 {
@@ -25,12 +26,43 @@ void ATank::BeginPlay()
 	PlayerControllerRef = Cast<APlayerController>(GetController());
 }
 
+// Called every frame
+void ATank::Tick(float DeltaTime)
+{
+	Super::BeginPlay();
+
+	if (PlayerControllerRef)
+	{
+		FHitResult HitResult;
+
+		PlayerControllerRef->GetHitResultUnderCursor(
+			ECC_Visibility,
+			false,
+			HitResult);
+
+		RotateTurret(HitResult.ImpactPoint);
+
+		DrawDebugSphere(
+			GetWorld(),
+			//GetActorLocation() + FVector(0.f, 0.f, 200.f),
+			HitResult.ImpactPoint,
+			25.f,
+			12,
+			FColor::Red,
+			false);
+	}
+}
+
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// WASD
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
 	PlayerInputComponent->BindAxis(TEXT("Turn"),		this, &ATank::Turn);
+
+	// Mouse Movement
+	//PlayerInputComponent->BindAxis(TEXT("RotateTurret"),this, &ABasePawn::RotateTurret);
 }
 
 void ATank::Move(float Value)
