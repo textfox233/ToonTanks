@@ -28,6 +28,11 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 }
 
+void ABasePawn::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void ABasePawn::RotateTurret(FVector LookAtTarget)
 {
 	// get line between here and the target
