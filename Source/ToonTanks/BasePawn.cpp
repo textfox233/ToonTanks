@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Projectile.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -29,20 +30,15 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 }
 
-//void ABasePawn::BeginPlay()
-//{
-//	Super::BeginPlay();
-//}
-
 void ABasePawn::RotateTurret(FVector LookAtTarget)
 {
 	// get line between here and the target
 	FVector ToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
+	
 	// get rotation (just the yaw, no leaning wanted)
 	FRotator LookAtRotation = FRotator(0.f, ToTarget.Rotation().Yaw, 0.f);
+	
 	// set rotation
-	//TurretMesh->SetWorldRotation(LookAtRotation);
-
 	TurretMesh->SetWorldRotation(
 		FMath::RInterpTo(
 			TurretMesh->GetComponentRotation(),
@@ -55,15 +51,22 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 
 void ABasePawn::Fire()
 {
-	DrawDebugSphere(
-		GetWorld(),
-		ProjectileSpawnPoint->GetComponentLocation(),
-		25.f,
-		12,
-		FColor::Red,
-		false,
-		3.f
-	);
+	// spawn a projectile
+	GetWorld()->SpawnActor<AProjectile>(
+		ProjectileClass, 
+		ProjectileSpawnPoint->GetComponentLocation(), 
+		ProjectileSpawnPoint->GetComponentRotation()
+		);
+
+	//DrawDebugSphere(
+	//	GetWorld(),
+	//	ProjectileSpawnPoint->GetComponentLocation(),
+	//	25.f,
+	//	12,
+	//	FColor::Red,
+	//	false,
+	//	3.f
+	//);
 }
 
 // Called every frame
