@@ -44,11 +44,10 @@ void ATank::Tick(float DeltaTime)
 
 		DrawDebugSphere(
 			GetWorld(),
-			//GetActorLocation() + FVector(0.f, 0.f, 200.f),
 			HitResult.ImpactPoint,
 			25.f,
 			12,
-			FColor::Red,
+			FColor::Blue,
 			false);
 	}
 }
@@ -61,6 +60,8 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
 	PlayerInputComponent->BindAxis(TEXT("Turn"),		this, &ATank::Turn);
 
+	// Fire Turret (on button press)
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ATank::Fire);
 	// Mouse Movement
 	//PlayerInputComponent->BindAxis(TEXT("RotateTurret"),this, &ABasePawn::RotateTurret);
 }

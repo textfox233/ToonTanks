@@ -4,23 +4,29 @@
 #include "Tower.h"
 #include "Tank.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// Find distance to tank
-	if (Tank)
+	// If the tank's in range, rotate turret towards tank
+	if (TankInRange())
 	{
-		float Distance = FVector::Dist(GetActorLocation(), Tank->GetActorLocation());
-
-		// Check if tank's in range
-		if (Distance <= FireRange)
-		{
-			// If true, rotate turret towards tank
-			RotateTurret(Tank->GetActorLocation());
-		}
+		RotateTurret(Tank->GetActorLocation());
 	}
+
+	//// Find distance to tank
+	//if (Tank)
+	//{
+	//	float Distance = FVector::Dist(GetActorLocation(), Tank->GetActorLocation());
+	//	// Check if tank's in range
+	//	if (Distance <= FireRange)
+	//	{
+	//		// If true, rotate turret towards tank
+	//		RotateTurret(Tank->GetActorLocation());
+	//	}
+	//}
 }
 
 void ATower::BeginPlay()
@@ -29,4 +35,41 @@ void ATower::BeginPlay()
 
 	// find the player tank for reference later
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	GetWorldTimerManager().SetTimer(FireRateTimerHandle, this, &ATower::CheckFireCondition, FireRate, true);
+}
+
+void ATower::CheckFireCondition()
+{
+	// If the tank's in range, fire
+	if (TankInRange())
+	{
+		Fire();
+	}
+
+//// Find distance to tank
+//	if (Tank)
+//	{
+//		float Distance = FVector::Dist(GetActorLocation(), Tank->GetActorLocation());
+//
+//		// Check if tank's in range
+//		if (Distance <= FireRange)
+//		{
+//			// If true, fire
+//			Fire();
+//		}
+//	}
+}
+
+bool ATower::TankInRange()
+{
+	if (Tank)
+	{
+		// Find distance to tank
+		float Distance = FVector::Dist(GetActorLocation(), Tank->GetActorLocation());
+
+		// Check if tank's in range
+		return Distance <= FireRange;
+	}
+	return false;
 }

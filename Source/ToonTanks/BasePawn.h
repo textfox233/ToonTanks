@@ -16,10 +16,12 @@ public:
 	ABasePawn();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	//// Called when the game starts or when spawned
+	//virtual void BeginPlay() override;
 
 	void RotateTurret(FVector LookAtTarget);
+	void Fire();
+
 private:
 	// Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
