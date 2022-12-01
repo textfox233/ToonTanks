@@ -17,6 +17,13 @@ void ATower::Tick(float DeltaTime)
 	}
 }
 
+// What happens on actor destruction
+void ATower::HandleDestruction()
+{
+	Super::HandleDestruction();
+	Destroy();
+}
+
 void ATower::BeginPlay()
 {
 	Super::BeginPlay();

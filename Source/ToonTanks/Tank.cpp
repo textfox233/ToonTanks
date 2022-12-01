@@ -23,7 +23,7 @@ void ATank::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerControllerRef = Cast<APlayerController>(GetController());
+	TankPlayerController = Cast<APlayerController>(GetController());
 }
 
 // Called every frame
@@ -31,11 +31,11 @@ void ATank::Tick(float DeltaTime)
 {
 	Super::BeginPlay();
 
-	if (PlayerControllerRef)
+	if (TankPlayerController)
 	{
 		FHitResult HitResult;
 
-		PlayerControllerRef->GetHitResultUnderCursor(
+		TankPlayerController->GetHitResultUnderCursor(
 			ECC_Visibility,
 			false,
 			HitResult);
@@ -50,6 +50,16 @@ void ATank::Tick(float DeltaTime)
 			FColor::Blue,
 			false);
 	}
+}
+
+// What happens on actor destruction
+void ATank::HandleDestruction()
+{
+	Super::HandleDestruction();
+
+	// hide and disable, don't destroy
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
 }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
