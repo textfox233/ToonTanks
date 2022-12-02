@@ -33,6 +33,33 @@ ABasePawn::ABasePawn()
 void ABasePawn::HandleDestruction()
 {
 	// TODO: visual/sound effects
+
+	// Explosion! :o
+	if (ExplosionDeathParticles)
+	{
+		// Spawn a death explosion
+		UGameplayStatics::SpawnEmitterAtLocation(
+			this,						// World context object
+			ExplosionDeathParticles,	// Particle system
+			this->GetActorLocation(),	// Location
+			this->GetActorRotation()	// Rotation
+		);
+	}
+	if (DeathSound)
+	{
+		// Play death sound effect
+		UGameplayStatics::PlaySoundAtLocation(
+			this,				// World context object
+			DeathSound,			// Actual sound effect
+			GetActorLocation()	// Location
+		);
+	}
+	if (DeathCameraShakeClass)
+	{
+		// Shake the camera
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(DeathCameraShakeClass);
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("no shakey")); }
 }
 
 void ABasePawn::RotateTurret(FVector LookAtTarget)
