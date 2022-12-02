@@ -10,19 +10,29 @@
 // Health component reports a 0 hp actor
 void AToonTanksGameMode::ActorDied(AActor* DeadActor)
 {
+	// if the dead actor is the player tank:
 	if (DeadActor == Tank)
 	{
+		// 1. Destroy the tank
 		Tank->HandleDestruction();
-		if (Tank->GetTankPlayerController())
-		{
-			ToonTanksPlayerController->SetPlayerEnabledState(false);
-			//Tank->DisableInput(Tank->GetTankPlayerController());
-			//Tank->GetTankPlayerController()->bShowMouseCursor = false;
-		}
+
+		// 2. Disable the player controller
+		if (Tank->GetTankPlayerController()) { ToonTanksPlayerController->SetPlayerEnabledState(false); }
+
+		// 3. Trigger gameover with a loss
+		GameOver(false);
 	}
+	// if the dead actor is a CPU tower:
 	if (ATower* DestroyedTower = Cast<ATower>(DeadActor))
 	{
+		// 1. Destroy the tower
 		DestroyedTower->HandleDestruction();
+
+		// 2. Update number of active towers within the level
+		TargetTowers--;
+
+		// 3. If there are no more towers to destroy trigger gameover with a victory
+		if (TargetTowers == 0) { GameOver(true); }
 	}
 }
 
@@ -33,8 +43,16 @@ void AToonTanksGameMode::BeginPlay()
 	HandleGameStart();
 }
 
+//void AToonTanksGameMode::GameOver(bool bWonGame)
+//{
+//
+//}
+
 void AToonTanksGameMode::HandleGameStart()
 {
+	// Get the number of active towers within the level
+	TargetTowers = GetTargetTowerCount();
+
 	// Get the player
 	Tank = Cast<ATank>(UGameplayStatics::GetPlayerPawn(this, 0));
 
@@ -62,4 +80,13 @@ void AToonTanksGameMode::HandleGameStart()
 			false						// Loop?
 		);
 	}
+}
+
+int32 AToonTanksGameMode::GetTargetTowerCount()
+{
+	// get all active towers within the level and store them in out variable AllTowers
+	TArray<AActor*> AllTowers;
+	UGameplayStatics::GetAllActorsOfClass(this, ATower::StaticClass(), AllTowers);
+
+	return AllTowers.Num();
 }
