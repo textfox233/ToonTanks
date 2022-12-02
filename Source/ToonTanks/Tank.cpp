@@ -60,6 +60,9 @@ void ATank::HandleDestruction()
 	// hide and disable, don't destroy
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
+
+	// mark the tank as dead
+	bAlive = false;
 }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -72,8 +75,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	// Fire Turret (on button press)
 	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ATank::Fire);
-	// Mouse Movement
-	//PlayerInputComponent->BindAxis(TEXT("RotateTurret"),this, &ABasePawn::RotateTurret);
 }
 
 void ATank::Move(float Value)

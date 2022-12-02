@@ -56,17 +56,17 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	auto MyOwner = GetOwner();
+	AActor* MyOwner = GetOwner();
 	if (MyOwner == nullptr) return;
 
 	// Gather data for apply damage function
 	// -------------------------------------
 	 
 	// EventInstigator - Controller that was responsible for causing this damage (e.g. player who shot the weapon)
-	auto MyOwnerInstigator = MyOwner->GetInstigatorController();
+	AController* MyOwnerInstigator = MyOwner->GetInstigatorController();
 	
 	// DamageTypeClass - Class that describes the damage that was done.
-	auto DamageTypeClass = UDamageType::StaticClass();
+	UClass* DamageTypeClass = UDamageType::StaticClass();
 
 	// Apply damage (if the actor hit isn't null, isn't this projectile and isn't this projectile's owner)
 	if (OtherActor && OtherActor != this && OtherActor != MyOwner)

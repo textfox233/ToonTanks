@@ -36,10 +36,14 @@ void ATower::BeginPlay()
 
 void ATower::CheckFireCondition()
 {
-	// If the tank's in range, fire
-	if (TankInRange())
+	if (Tank)
 	{
-		Fire();
+		// If the tank's in range & currently alive, fire
+		if (Tank->bAlive && TankInRange())
+		{
+			Fire();
+		}
+		//UE_LOG(LogTemp, Warning, TEXT("%s"),(Tank->bAlive ? TEXT("true") : TEXT("false")));
 	}
 }
 
