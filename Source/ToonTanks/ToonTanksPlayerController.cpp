@@ -10,4 +10,6 @@ void AToonTanksPlayerController::SetPlayerEnabledState(bool bPLayerEnabled)
 	if (bPLayerEnabled) { GetPawn()->EnableInput(this); }
 	// else disable
 	else { GetPawn()->DisableInput(this); }
+	// show/hide mouse cursor to match player enabled state
+	bShowMouseCursor = bPLayerEnabled;
 }
